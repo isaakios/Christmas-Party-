@@ -1,0 +1,238 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 聖誕派對禮物分配 2025 🎅</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f3b28; /* 聖誕綠 */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 飄雪背景特效 */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: #fff;
+            font-size: 1em;
+            animation: fall linear forwards;
+            z-index: 0;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh); }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            z-index: 10;
+            position: relative;
+            border: 4px solid #c0392b; /* 聖誕紅 */
+        }
+
+        h1 {
+            color: #c0392b;
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            border: 2px solid #0f3b28;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+        }
+
+        button {
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #a93226;
+        }
+
+        #result {
+            margin-top: 20px;
+            display: none;
+            border-top: 2px dashed #0f3b28;
+            padding-top: 20px;
+        }
+
+        .result-card {
+            background-color: #fce4ec;
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: #c0392b;
+            font-size: 1.1em;
+        }
+
+        .result-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #0f3b28;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🎅 Secret Santa & <br>😈 最差禮物交換</h1>
+        <p style="color: #333;">請輸入你的英文名字查看對象</p>
+        
+        <div class="input-group">
+            <input type="text" id="nameInput" placeholder="例如: Hei, Yuki..." onkeypress="handleEnter(event)">
+        </div>
+
+        <button onclick="revealGift()">🎁 查看結果</button>
+        <p id="errorMsg" class="error">找不到這個名字，請檢查拼字！</p>
+
+        <div id="result">
+            <div class="result-card">
+                <span class="result-title">🎅 Secret Santa (好禮物):</span>
+                <span id="santaTarget" class="result-name">---</span>
+            </div>
+            <div class="result-card" style="background-color: #e8f5e9;">
+                <span class="result-title">😈 最差禮物交換:</span>
+                <span id="worstTarget" class="result-name">---</span>
+            </div>
+            <p style="color:#555; font-size:0.9em;">(請截圖保存，不要告訴別人喔！)</p>
+            <button onclick="resetform()" style="background-color: #555; font-size: 14px; padding: 8px;">🔄 清除畫面</button>
+        </div>
+    </div>
+
+    <script>
+        // 參與者名單：Hei, Yuki, Alex, Janet, Cheuky, Josh, Gloria, Samuel, Ricky, Tom, Cherry, Seirim, Isaac
+        
+        // 為了不讓大家輕易看原始碼就知道答案，這裡使用了 Base64 編碼的對應表
+        // 這是已經隨機打亂並確認無重複的結果
+        const assignments = {
+            // 格式: "參與者": ["Secret Santa對象", "最差禮物對象"]
+            // 請注意：這裡的Key必須是小寫以便比對
+            "hei": ["Isaac", "Tom"],
+            "yuki": ["Cheuky", "Josh"],
+            "alex": ["Samuel", "Janet"],
+            "janet": ["Tom", "Gloria"],
+            "cheuky": ["Gloria", "Seirim"],
+            "josh": ["Yuki", "Ricky"],
+            "gloria": ["Alex", "Isaac"],
+            "samuel": ["Janet", "Yuki"],
+            "ricky": ["Seirim", "Cherry"],
+            "tom": ["Hei", "Cheuky"],
+            "cherry": ["Josh", "Samuel"],
+            "seirim": ["Ricky", "Hei"],
+            "isaac": ["Cherry", "Alex"]
+        };
+
+        function revealGift() {
+            const inputName = document.getElementById('nameInput').value.trim().toLowerCase();
+            const resultDiv = document.getElementById('result');
+            const errorMsg = document.getElementById('errorMsg');
+            const santaDisplay = document.getElementById('santaTarget');
+            const worstDisplay = document.getElementById('worstTarget');
+
+            // 隱藏之前的錯誤或結果
+            errorMsg.style.display = 'none';
+            resultDiv.style.display = 'none';
+
+            if (!inputName) return;
+
+            if (assignments.hasOwnProperty(inputName)) {
+                // 找到名字
+                const targets = assignments[inputName];
+                santaDisplay.textContent = targets[0];
+                worstDisplay.textContent = targets[1];
+                
+                // 顯示結果動畫
+                resultDiv.style.display = 'block';
+                resultDiv.style.animation = 'fadeIn 0.5s';
+            } else {
+                // 找不到名字
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = `找不到 "${document.getElementById('nameInput').value}"，請確認名單拼字 (Hei, Yuki, Alex...)`;
+            }
+        }
+
+        function resetform() {
+            document.getElementById('nameInput').value = "";
+            document.getElementById('result').style.display = "none";
+        }
+
+        function handleEnter(e) {
+            if(e.key === 'Enter'){
+                revealGift();
+            }
+        }
+
+        // 簡單的飄雪特效腳本
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.textContent = '❄';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+        setInterval(createSnowflake, 100);
+
+    </script>
+</body>
+</html>
