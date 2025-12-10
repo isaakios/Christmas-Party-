@@ -157,31 +157,32 @@
         </div>
         
         <div class="names-list">
-            <p>名單 (共15人):<br>Hei, Yuki, Alex, Janet, Cheuky, Josh, Gloria, Samuel, Ricky, Tom, Cherry, Seirim, Isaac, Eva, Tommy</p>
+            <p>名單 (共16人):<br>Hei, Yuki, Alex, Janet, Cheuky, Josh, Gloria, Samuel, Ricky, Cherry, Seirim, Isaac, Eva, Tommy, Ken, Jocelyn</p>
         </div>
     </div>
 
     <script>
-        // 參與者名單更新：Hei, Yuki, Alex, Janet, Cheuky, Josh, Gloria, Samuel, Ricky, Tom, Cherry, Seirim, Isaac, Eva, Tommy (15人)
-        // 壞禮物環節已移除
+        // 參與者名單更新 (共16人)
+        // 新增: Ken, Jocelyn
         
-        // 重新隨機配對結果 (Circular Loop 確保無人落單)
+        // 重新隨機配對結果 (2025-12-10 Reshuffled)
         const assignments = {
-            "hei": "Eva",
-            "eva": "Janet",
-            "janet": "Ricky",
-            "ricky": "Tommy",
-            "tommy": "Alex",
-            "alex": "Seirim",
-            "seirim": "Josh",
-            "josh": "Cherry",
-            "cherry": "Isaac",
-            "isaac": "Cheuky",
-            "cheuky": "Tom",
-            "tom": "Yuki",
-            "yuki": "Gloria",
-            "gloria": "Samuel",
-            "samuel": "Hei"
+            "hei": "Ken",
+            "ken": "Yuki",
+            "yuki": "Jocelyn",
+            "jocelyn": "Alex",
+            "alex": "Janet",
+            "janet": "Tommy",
+            "tommy": "Cheuky",
+            "cheuky": "Josh",
+            "josh": "Gloria",
+            "gloria": "Isaac",
+            "isaac": "Samuel",
+            "samuel": "Seirim",
+            "seirim": "Ricky",
+            "ricky": "Eva",
+            "eva": "Cherry",
+            "cherry": "Hei"
         };
 
         function revealGift() {
@@ -239,6 +240,11 @@
             }, 5000);
         }
         setInterval(createSnowflake, 100);
+
+    </script>
+</body>
+</html>
+     setInterval(createSnowflake, 100);
 
     </script>
 </body>
